@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Tests</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<ifi></ifi>
+	</div>
+</body>
+
+<script>
+
+Vue.component('ifi', {
+	template: `
+		<div class="ifiRoot" :style="ifiStyle">
+			<img draggable="false" v-dragImage v-zoomImage :class="classes" :src="source" @dblclick="zoom">
+		</div>
+	`,
+	props: [],
+	data() {
+		return {
+			source: '01.jpg',
+			//source: 'https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg',
+			zoomed: false
+		}
+	},
+	computed: {
+		classes() {
+			return "imageIFI" + (this.zoomed ? " imageZoomed" : "");
+		},
+		ifiStyle() {
+
+		}
+	},
+	methods: {
+		zoom() {
+			this.zoomed = !this.zoomed;
+		},
+	},
+	directives:{
+		dragImage(element) {
+			element.onmousedown = function(event) {
+				var disx = event.pageX - element.offsetLeft;
+				//var disy = event.pageY - element.offsetTop;
+
+				document.onmousemove = function(event) {
+					element.style.left = event.pageX - disx + 'px';
+					//element.style.top = event.pageY - disy + 'px';
+				}
+
+				document.onmouseup = function() {
+					document.onmousemove = document.onmouseup = null;
+				}
+			}
+		},
+		zoomImage(element) {
+			element.ondblclick = function(event) {
+				element.style.left = "0px";
+				element.style.top = "0px";
+			}
+		}
+	}
+});
+
+var app = new Vue({
+	el: '#app',
+	data() {
+		return {
+		}
+	},
+	methods: {
+	}
+})
+
+</script>
+
+<style>
+	body {
+		margin: 0;
+		background-color: black;
+		height: 100vh;
+		overflow: hidden;
+	}
+	#app {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+	}
+	.ifiRoot {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+		width: 100vw;
+	}
+	.imageIFI {
+	    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+		position: relative;
+		left: 0px;
+		object-fit: contain;
+		max-height: 100%;
+		max-width: 100%;
+		transition: object-fit 500ms;
+	}
+	.imageIFI.imageZoomed {
+		object-fit: cover;
+		transition: object-fit 500ms;
+	}
+</style>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>Vue learning</title>
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+		
+		<style type="text/css"> 
+			.drag{
+				width: 100px;
+				height: 100px;
+				position: absolute;
+				top: 0;
+				left: 0;
+				background-color: red;
+				background: url(https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg);
+				background-size: cover;
+			}
+			.drag:hover{
+				width: 100px;
+				height: 100px;
+				position: absolute;
+				top: 0;
+				left: 0;
+				cursor:pointer;
+				background-color: red;
+				background: url(https://interactive-examples.mdn.mozilla.net/media/cc0-images/grapefruit-slice-332-332.jpg);
+				background-size: cover;
+			}
+		</style>
+		
+    </head>
+	
+	<div id="app1" v-drag class="drag"></div>
+	
+	<script>
+		 // drag the div element
+		let vm1 = new Vue({
+			el:'#app1',
+			 // custom instructions
+			directives:{
+				drag(el){
+					el.onmousedown = function(e){
+						var disx = e.pageX - el.offsetLeft;
+						var disy = e.pageY - el.offsetTop;
+						document.onmousemove = function (e){
+							el.style.left = e.pageX - disx + 'px';
+							el.style.top = e.pageY - disy + 'px';
+						}
+						document.onmouseup = function(){
+							document.onmousemove = document.onmouseup = null;
+						}
+					}
+				}
+			}
+		})
+    </script>
+	</body>
+
+</html>
